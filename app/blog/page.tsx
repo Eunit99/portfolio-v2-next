@@ -11,11 +11,16 @@ export default async function Blog() {
   const supabase = await createClient();
 
   // Fetch only published posts
-  const { data: posts } = await supabase
+  const { data: posts, error } = await supabase
     .from('posts')
     .select('*')
     .eq('status', 'published')
     .order('published_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching posts:', error);
+    return <div className="text-red-500">Error loading blog posts.</div>;
+  }
 
   // Transform DB shape to App Type shape
   const formattedPosts: Post[] = (posts || []).map((p) => ({

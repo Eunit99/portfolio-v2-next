@@ -2,18 +2,34 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { ContactMessage, Post, ResearchPaper } from '@/types/types'
+import { Post } from '@/types/types'
 
 // --- Contact & Newsletter ---
 
 export async function submitMessage(formData: FormData) {
   const supabase = await createClient()
 
+  const name = (formData.get('name') as string || '').trim()
+  const email = (formData.get('email') as string || '').trim()
+  const subject = (formData.get('subject') as string || '').trim()
+  const messageText = (formData.get('message') as string || '').trim()
+
+  // Validate required fields
+  if (!name || !email || !subject || !messageText) {
+    return { success: false, error: 'All fields are required.' }
+  }
+
+  // Basic email validation using regex
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email)) {
+    return { success: false, error: 'Invalid email address.' }
+  }
+
   const message = {
-    name: formData.get('name') as string,
-    email: formData.get('email') as string,
-    subject: formData.get('subject') as string,
-    message: formData.get('message') as string,
+    name,
+    email,
+    subject,
+    message: messageText,
     is_read: false,
   }
 
@@ -30,7 +46,12 @@ export async function submitMessage(formData: FormData) {
 
 export async function subscribeNewsletter(formData: FormData) {
   const supabase = await createClient()
-  const email = formData.get('email') as string
+  const email = (formData.get('email') as string || '').trim()
+
+  // Validate email
+  if (!email || !email.includes('@')) {
+    return { success: false, error: 'Invalid email address' }
+  }
 
   const { error } = await supabase.from('subscribers').insert({ email })
 
@@ -44,29 +65,57 @@ export async function subscribeNewsletter(formData: FormData) {
 
 export async function deletePost(id: string) {
   const supabase = await createClient()
-  await supabase.from('posts').delete().eq('id', id)
+  const { error } = await supabase.from('posts').delete().eq('id', id)
+
+  if (error) {
+    console.error('Error deleting post:', error)
+    return { success: false, error: error.message }
+  }
+
   revalidatePath('/admin/posts')
   revalidatePath('/blog')
   revalidatePath('/health')
+  return { success: true }
 }
 
 export async function deleteResearch(id: string) {
   const supabase = await createClient()
-  await supabase.from('research_papers').delete().eq('id', id)
+  const { error } = await supabase.from('research_papers').delete().eq('id', id)
+
+  if (error) {
+    console.error('Error deleting research:', error)
+    return { success: false, error: error.message }
+  }
+
   revalidatePath('/admin/research')
   revalidatePath('/research')
+  return { success: true }
 }
 
 export async function deleteMessage(id: string) {
   const supabase = await createClient()
-  await supabase.from('messages').delete().eq('id', id)
+  const { error } = await supabase.from('messages').delete().eq('id', id)
+
+  if (error) {
+    console.error('Error deleting message:', error)
+    return { success: false, error: error.message }
+  }
+
   revalidatePath('/admin/messages')
+  return { success: true }
 }
 
 export async function markMessageAsRead(id: string) {
   const supabase = await createClient()
-  await supabase.from('messages').update({ is_read: true }).eq('id', id)
+  const { error } = await supabase.from('messages').update({ is_read: true }).eq('id', id)
+
+  if (error) {
+    console.error('Error marking message as read:', error)
+    return { success: false, error: error.message }
+  }
+
   revalidatePath('/admin/messages')
+  return { success: true }
 }
 
 export async function savePost(post: Partial<Post>) {
@@ -85,11 +134,20 @@ export async function savePost(post: Partial<Post>) {
   }
 
   if (post.id) {
-    await supabase.from('posts').update(dbPost).eq('id', post.id)
+    const { error } = await supabase.from('posts').update(dbPost).eq('id', post.id)
+    if (error) {
+      console.error('Error updating post:', error)
+      return { success: false, error: error.message }
+    }
   } else {
-    await supabase.from('posts').insert(dbPost)
+    const { error } = await supabase.from('posts').insert(dbPost)
+    if (error) {
+      console.error('Error creating post:', error)
+      return { success: false, error: error.message }
+    }
   }
 
   revalidatePath('/admin/posts')
   revalidatePath('/blog')
+  return { success: true }
 }

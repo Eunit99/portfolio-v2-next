@@ -6,8 +6,6 @@ import { ContactMessage } from '@/types/types';
 import { deleteMessage, markMessageAsRead } from '@/lib/actions';
 
 export default function MessageListClient({ initialMessages }: { initialMessages: ContactMessage[] }) {
-  // We use optimistic updates or simply router.refresh() via Server Actions
-  // For simplicity, we assume the server action revalidates the path.
 
   return (
     <div className="grid gap-4">
@@ -37,7 +35,18 @@ export default function MessageListClient({ initialMessages }: { initialMessages
                 </span>
                 {!msg.read && (
                   <button
-                    onClick={() => markMessageAsRead(msg.id)}
+                    onClick={async () => {
+                      try {
+                        const result = await markMessageAsRead(msg.id);
+                        if (!result.success) {
+                          console.error('Failed to mark message as read:', result.error);
+                          alert('Failed to mark message as read. Please try again.');
+                        }
+                      } catch (error) {
+                        console.error('Failed to mark message as read:', error);
+                        alert('Failed to mark message as read. Please try again.');
+                      }
+                    }}
                     className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-green-400"
                     title="Mark as Read"
                   >
@@ -46,7 +55,18 @@ export default function MessageListClient({ initialMessages }: { initialMessages
                 )}
                 <button
                   onClick={async () => {
-                    if (confirm("Delete message?")) await deleteMessage(msg.id)
+                    if (confirm("Delete message?")) {
+                      try {
+                        const result = await deleteMessage(msg.id);
+                        if (!result.success) {
+                          console.error('Failed to delete message:', result.error);
+                          alert('Failed to delete message. Please try again.');
+                        }
+                      } catch (error) {
+                        console.error('Failed to delete message:', error);
+                        alert('Failed to delete message. Please try again.');
+                      }
+                    }
                   }}
                   className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-red-400"
                   title="Delete"

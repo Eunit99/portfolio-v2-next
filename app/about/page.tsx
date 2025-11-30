@@ -1,6 +1,6 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
+import { notFound } from 'next/navigation';
 
 export const metadata = {
   title: 'About - Emmanuel Uchenna',
@@ -11,10 +11,21 @@ export default async function About() {
   const supabase = await createClient();
 
   // Fetch profile. Assuming single user portfolio, we fetch the first profile.
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from('profiles')
     .select('*')
     .single();
+
+  if (error) {
+    // PGRST116 is "not found" error, show 404 page
+    if (error.code === 'PGRST116') {
+      notFound();
+    } else {
+      // Log other errors and show a generic error message
+      console.error('Error fetching profile:', error);
+      throw new Error('Failed to load profile data.');
+    }
+  }
 
   // Fallback content if no profile exists in DB yet
   const bio = profile?.bio || "Biography content not yet available.";

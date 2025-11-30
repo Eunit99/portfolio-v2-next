@@ -9,18 +9,28 @@ export default async function Dashboard() {
 
   // Parallel data fetching for stats
   const [
-    { count: postCount },
-    { count: messageCount },
-    { data: posts }
+    { count: postCount, error: postError },
+    { count: messageCount, error: messageError },
+    { data: posts, error: postsError }
   ] = await Promise.all([
     supabase.from('posts').select('*', { count: 'exact', head: true }),
     supabase.from('messages').select('*', { count: 'exact', head: true }),
     supabase.from('posts').select('*').order('created_at', { ascending: false }).limit(5)
   ]);
 
-  // Calculate total views (sum of all post views)
-  const { data: allPosts } = await supabase.from('posts').select('views');
-  const totalViews = allPosts?.reduce((acc, curr) => acc + (curr.views || 0), 0) || 0;
+  if (postError || messageError || postsError) {
+    console.error('Error fetching dashboard data:', postError, messageError, postsError);
+    return (
+      <div className="p-8 text-center text-red-500">
+        Error loading dashboard data. Please try again later.
+      </div>
+    );
+  }
+
+  // Calculate total views more efficiently if possible, currently iterating is fine for small datasets
+  // ideally use a .rpc() call or a view for sum operations to avoid fetching all rows
+  const { data: allPostsViews } = await supabase.from('posts').select('views');
+  const totalViews = allPostsViews?.reduce((acc, curr) => acc + (curr.views || 0), 0) || 0;
 
   return (
     <div className="space-y-8 animate-in fade-in">
@@ -32,7 +42,7 @@ export default async function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Total Views" value={totalViews.toLocaleString()} icon={Eye} trend="All time" />
+        <StatCard title="Total Views" value={totalViews.toLocaleString()} icon={Eye} label="All time" />
         <StatCard title="Total Posts" value={postCount || 0} icon={FileText} />
         <StatCard title="Messages" value={messageCount || 0} icon={MessageSquare} />
       </div>
@@ -73,13 +83,13 @@ export default async function Dashboard() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const StatCard: React.FC<any> = ({ title, value, icon: Icon, trend }) => (
+const StatCard: React.FC<any> = ({ title, value, icon: Icon, label }) => (
   <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-xl space-y-4">
     <div className="flex justify-between items-start">
       <div className="p-2 bg-zinc-800 rounded-lg text-zinc-400">
         <Icon className="w-5 h-5" />
       </div>
-      {trend && <span className="text-xs font-medium text-green-500 bg-green-950/30 px-2 py-1 rounded">{trend}</span>}
+      {label && <span className="text-xs font-medium text-green-500 bg-green-950/30 px-2 py-1 rounded">{label}</span>}
     </div>
     <div>
       <div className="text-3xl font-serif font-bold text-white">{value}</div>

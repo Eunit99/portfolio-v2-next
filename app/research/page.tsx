@@ -12,10 +12,15 @@ export const metadata = {
 export default async function Research() {
   const supabase = await createClient();
 
-  const { data: papers } = await supabase
+  const { data: papers, error } = await supabase
     .from('research_papers')
     .select('*')
     .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching research papers:', error);
+    return <div className="text-red-500">Error loading research papers.</div>;
+  }
 
   const formattedPapers: ResearchPaper[] = (papers || []).map(p => ({
     ...p,
