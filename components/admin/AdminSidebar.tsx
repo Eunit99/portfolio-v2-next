@@ -21,9 +21,9 @@ export default function AdminSidebar() {
 
   const navItems = [
     { label: 'Overview', path: '/admin/dashboard', icon: LayoutDashboard },
-    { label: 'Posts', path: '/admin/posts', icon: FileText },
-    { label: 'Research', path: '/admin/research', icon: BookOpen },
-    { label: 'Messages', path: '/admin/messages', icon: Activity },
+    { label: 'Posts', path: '/admin/post-list', icon: FileText },
+    { label: 'Research', path: '/admin/research-list', icon: BookOpen },
+    { label: 'Messages', path: '/admin/message-list', icon: Activity },
   ];
 
   return (
