@@ -1,27 +1,26 @@
-"use client";
-
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { ExternalLink } from 'lucide-react';
-import { ResearchPaper } from '@/types/types';
-import { DataService } from '@/lib/data';
+import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
+import { ResearchPaper } from '@/types/types';
 
+export const metadata = {
+  title: 'Research - My Portfolio',
+  description: 'Academic contributions and whitepapers.',
+};
 
+export default async function Research() {
+  const supabase = await createClient();
 
+  const { data: papers } = await supabase
+    .from('research_papers')
+    .select('*')
+    .order('created_at', { ascending: false });
 
-
-
-
-
-
-
-export default function Research() {
-  const [papers, setPapers] = useState<ResearchPaper[]>([]);
-
-  useEffect(() => {
-    DataService.getResearch().then(setPapers);
-  }, []);
+  const formattedPapers: ResearchPaper[] = (papers || []).map(p => ({
+    ...p,
+    publicationDate: p.publication_date, // Map snake_case to camelCase
+  }));
 
   return (
     <div className="space-y-12 animate-in fade-in duration-500">
@@ -33,7 +32,7 @@ export default function Research() {
       </div>
 
       <div className="grid gap-6">
-        {papers.map((paper) => (
+        {formattedPapers.map((paper) => (
           <Link key={paper.id} href={`/research/${paper.id}`} className="block">
             <div className="p-6 bg-zinc-900/30 border border-zinc-800 hover:border-zinc-600 rounded-xl transition-all duration-300 group">
               <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
@@ -60,4 +59,4 @@ export default function Research() {
       </div>
     </div>
   );
-};
+}
