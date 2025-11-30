@@ -29,7 +29,15 @@ export default async function Dashboard() {
 
   // Calculate total views more efficiently if possible, currently iterating is fine for small datasets
   // ideally use a .rpc() call or a view for sum operations to avoid fetching all rows
-  const { data: allPostsViews } = await supabase.from('posts').select('views');
+  const { data: allPostsViews, error: viewsError } = await supabase.from('posts').select('views');
+  if (viewsError) {
+    console.error('Error fetching post views:', viewsError);
+    return (
+      <div className="p-8 text-center text-red-500">
+        Error loading dashboard data. Please try again later.
+      </div>
+    );
+  }
   const totalViews = allPostsViews?.reduce((acc, curr) => acc + (curr.views || 0), 0) || 0;
 
   return (
@@ -42,7 +50,7 @@ export default async function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Total Views" value={totalViews.toLocaleString()} icon={Eye} label="All time" />
+        <StatCard title="Total Views" value={totalViews.toLocaleString()} icon={Eye} period="All time" />
         <StatCard title="Total Posts" value={postCount || 0} icon={FileText} />
         <StatCard title="Messages" value={messageCount || 0} icon={MessageSquare} />
       </div>
@@ -83,13 +91,13 @@ export default async function Dashboard() {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const StatCard: React.FC<any> = ({ title, value, icon: Icon, label }) => (
+const StatCard: React.FC<any> = ({ title, value, icon: Icon, period }) => (
   <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-xl space-y-4">
     <div className="flex justify-between items-start">
       <div className="p-2 bg-zinc-800 rounded-lg text-zinc-400">
         <Icon className="w-5 h-5" />
       </div>
-      {label && <span className="text-xs font-medium text-green-500 bg-green-950/30 px-2 py-1 rounded">{label}</span>}
+      {period && <span className="text-xs font-medium text-green-500 bg-green-950/30 px-2 py-1 rounded">{period}</span>}
     </div>
     <div>
       <div className="text-3xl font-serif font-bold text-white">{value}</div>

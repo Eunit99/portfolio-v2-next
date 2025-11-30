@@ -43,8 +43,8 @@ export default function MessageListClient({ initialMessages }: { initialMessages
                           alert('Failed to mark message as read. Please try again.');
                         }
                       } catch (error) {
-                        console.error('Failed to mark message as read:', error);
-                        alert('Failed to mark message as read. Please try again.');
+                        console.error('Unexpected error marking message as read:', error);
+                        alert('An unexpected error occurred. Please try again.');
                       }
                     }}
                     className="p-2 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-green-400"
@@ -63,8 +63,8 @@ export default function MessageListClient({ initialMessages }: { initialMessages
                           alert('Failed to delete message. Please try again.');
                         }
                       } catch (error) {
-                        console.error('Failed to delete message:', error);
-                        alert('Failed to delete message. Please try again.');
+                        console.error('Unexpected error deleting message:', error);
+                        alert('An unexpected error occurred. Please try again.');
                       }
                     }
                   }}
