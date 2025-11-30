@@ -1,23 +1,18 @@
-"use client";
+import React from 'react';
+import { createClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
 
-import { AuthService } from '@/lib/auth';
-import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+export default async function AdminPage({ children }: { children: React.ReactNode }) {
+  const supabase = await createClient();
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
+  if (!user) {
+    redirect('/auth/login');
+  } else {
 
-
-export default function Admin()  {
-  const router = useRouter();
-
-  useEffect(() => {
-    // Redirect to login if not authenticated
-    if (AuthService.isAuthenticated()) {
-      router.replace('/admin/dashboard');
-    } else {
-      router.replace('/login');
-    }
-  }, [router]);
-
-  return null; // Logic is handled by router and effects
-};
+    redirect('/admin/dashboard');
+  }
+}
