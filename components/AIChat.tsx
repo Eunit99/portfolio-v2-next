@@ -26,7 +26,7 @@ Use the following bio to answer questions about his experience, skills, and inte
 ${BIO}
 
 Tone: Professional, articulate, slightly informal but respectful.
-If asked about contact info, suggest they visit the contact page or email emmanuel@example.com.
+If asked about contact info, suggest they visit the contact page or email contact@eunit.me.
 If asked about specific code implementation details not in the bio, politely decline and offer general expertise.
 Keep responses concise (under 3 sentences usually).`;
 
@@ -61,7 +61,8 @@ export const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const apiKey = process.env.API_KEY;
+      const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+
       if (!apiKey) {
         throw new Error("API Key missing");
       }
@@ -97,11 +98,10 @@ export const AIChat: React.FC = () => {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 p-4 bg-white text-black rounded-full shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 transition-all duration-300 z-50 ${isOpen ? 'hidden' : 'flex'}`}
+        className={`cursor-pointer fixed bottom-6 right-6 p-4 bg-white text-black rounded-full shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 transition-all duration-300 z-50 ${isOpen ? 'hidden' : 'flex'}`}
         aria-label="Open AI Chat"
       >
-        <Sparkles className="w-6 h-6 mr-2" />
-        <span className="font-semibold">Ask AI Emmanuel</span>
+        <Sparkles className="w-6 h-6 animate-pulse" />
       </button>
 
       {/* Chat Window */}
@@ -116,7 +116,9 @@ export const AIChat: React.FC = () => {
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              aria-label="Close AI Chat"
+              title="CLose"
             >
               <X className="w-5 h-5" />
             </button>
