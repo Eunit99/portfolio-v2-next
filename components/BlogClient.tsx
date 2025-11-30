@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Link as LinkIcon, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Category, Post } from '@/types/types';
 import Image from 'next/image';
 import Link from 'next/link';
