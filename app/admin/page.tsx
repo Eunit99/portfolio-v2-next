@@ -1,8 +1,7 @@
-import React from 'react';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 
-export default async function AdminPage({ children }: { children: React.ReactNode }) {
+export default async function AdminPage() {
   const supabase = await createClient();
 
   const {
@@ -11,8 +10,7 @@ export default async function AdminPage({ children }: { children: React.ReactNod
 
   if (!user) {
     redirect('/auth/login');
-  } else {
-
-    redirect('/admin/dashboard');
   }
+
+  redirect('/admin/dashboard');
 }
