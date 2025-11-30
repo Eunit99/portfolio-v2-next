@@ -1,40 +1,26 @@
-"use client";
-
-
-import React, { useEffect, useState } from 'react';
-import { Plus, Eye, FileText, MessageSquare } from 'lucide-react';
+import React from 'react';
+import { Eye, FileText, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
-import { DataService } from '@/lib/data';
-import { Post } from '@/types/types';
+import { createClient } from '@/utils/supabase/server';
+import { Plus } from 'lucide-react';
 
+export default async function Dashboard() {
+  const supabase = await createClient();
 
+  // Parallel data fetching for stats
+  const [
+    { count: postCount },
+    { count: messageCount },
+    { data: posts }
+  ] = await Promise.all([
+    supabase.from('posts').select('*', { count: 'exact', head: true }),
+    supabase.from('messages').select('*', { count: 'exact', head: true }),
+    supabase.from('posts').select('*').order('created_at', { ascending: false }).limit(5)
+  ]);
 
-
-
-
-
-
-
-
-export default function Dashboard() {
-  const [stats, setStats] = useState({ posts: 0, views: 0, messages: 0 });
-  const [recentPosts, setRecentPosts] = useState<Post[]>([]);
-
-  useEffect(() => {
-    const loadStats = async () => {
-      const posts = await DataService.getPosts();
-      const messages = await DataService.getMessages();
-      const totalViews = posts.reduce((acc, curr) => acc + (curr.views || 0), 0);
-
-      setStats({
-        posts: posts.length,
-        views: totalViews,
-        messages: messages.length,
-      });
-      setRecentPosts(posts.slice(0, 5));
-    };
-    loadStats();
-  }, []);
+  // Calculate total views (sum of all post views)
+  const { data: allPosts } = await supabase.from('posts').select('views');
+  const totalViews = allPosts?.reduce((acc, curr) => acc + (curr.views || 0), 0) || 0;
 
   return (
     <div className="space-y-8 animate-in fade-in">
@@ -46,9 +32,9 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Total Views" value={stats.views.toLocaleString()} icon={Eye} trend="+12%" />
-        <StatCard title="Total Posts" value={stats.posts.toString()} icon={FileText} />
-        <StatCard title="Messages" value={stats.messages.toString()} icon={MessageSquare} />
+        <StatCard title="Total Views" value={totalViews.toLocaleString()} icon={Eye} trend="All time" />
+        <StatCard title="Total Posts" value={postCount || 0} icon={FileText} />
+        <StatCard title="Messages" value={messageCount || 0} icon={MessageSquare} />
       </div>
 
       <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden">
@@ -56,12 +42,12 @@ export default function Dashboard() {
           <h2 className="text-lg font-serif font-bold text-white">Recent Content</h2>
         </div>
         <div className="divide-y divide-zinc-800">
-          {recentPosts.map((post) => (
+          {posts?.map((post) => (
             <div key={post.id} className="p-4 flex items-center justify-between hover:bg-zinc-900/80 transition-colors">
               <div>
                 <div className="font-medium text-white">{post.title}</div>
                 <div className="text-xs text-zinc-500 flex gap-2 mt-1">
-                  <span>{post.date}</span>
+                  <span>{new Date(post.created_at).toLocaleDateString()}</span>
                   <span>•</span>
                   <span>{post.category}</span>
                   <span>•</span>
@@ -84,7 +70,7 @@ export default function Dashboard() {
       </div>
     </div>
   );
-};
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const StatCard: React.FC<any> = ({ title, value, icon: Icon, trend }) => (

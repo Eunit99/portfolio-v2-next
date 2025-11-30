@@ -1,29 +1,26 @@
-"use client";
-
+'use client';
 
 import React, { useState } from 'react';
-import { Send, CheckCircle } from 'lucide-react';
-
-
-
-
-
-
-
-
-
-
+import { Send, CheckCircle, Loader2 } from 'lucide-react';
+import { submitMessage } from '@/lib/actions';
 
 export default function Contact() {
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus('submitting');
-    // Simulate network request
-    setTimeout(() => {
+
+    const formData = new FormData(e.currentTarget);
+    const result = await submitMessage(formData);
+
+    if (result.success) {
       setStatus('success');
-    }, 1500);
+    } else {
+      setStatus('error');
+      setErrorMessage(result.error || 'Failed to send message');
+    }
   };
 
   return (
@@ -51,11 +48,18 @@ export default function Contact() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6">
+          {status === 'error' && (
+            <div className="p-4 bg-red-950/50 border border-red-900 text-red-200 rounded-lg text-center">
+              {errorMessage}
+            </div>
+          )}
+
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium text-zinc-300">Name</label>
               <input
                 required
+                name="name"
                 type="text"
                 id="name"
                 className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-white/20 focus:border-white outline-none transition-all"
@@ -66,6 +70,7 @@ export default function Contact() {
               <label htmlFor="email" className="text-sm font-medium text-zinc-300">Email</label>
               <input
                 required
+                name="email"
                 type="email"
                 id="email"
                 className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-white/20 focus:border-white outline-none transition-all"
@@ -76,7 +81,7 @@ export default function Contact() {
 
           <div className="space-y-2">
             <label htmlFor="subject" className="text-sm font-medium text-zinc-300">Subject</label>
-            <select id="subject" className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-white/20 focus:border-white outline-none transition-all appearance-none">
+            <select name="subject" id="subject" className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-white/20 focus:border-white outline-none transition-all appearance-none">
               <option>General Inquiry</option>
               <option>Project Collaboration</option>
               <option>Speaking Opportunity</option>
@@ -88,6 +93,7 @@ export default function Contact() {
             <label htmlFor="message" className="text-sm font-medium text-zinc-300">Message</label>
             <textarea
               required
+              name="message"
               id="message"
               rows={6}
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-white/20 focus:border-white outline-none transition-all resize-none"
@@ -100,7 +106,7 @@ export default function Contact() {
             disabled={status === 'submitting'}
             className="w-full bg-white text-black font-bold py-4 rounded-lg hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {status === 'submitting' ? 'Sending...' : (
+            {status === 'submitting' ? <Loader2 className="w-4 h-4 animate-spin" /> : (
               <>Send Message <Send className="w-4 h-4" /></>
             )}
           </button>
@@ -115,4 +121,4 @@ export default function Contact() {
       </div>
     </div>
   );
-};
+}

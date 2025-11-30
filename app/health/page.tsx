@@ -1,28 +1,32 @@
-"use client";
-
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Activity } from 'lucide-react';
-import { DataService } from '@/lib/data';
-import { Category, Post } from '@/types/types';
+import { createClient } from '@/utils/supabase/server';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Post } from '@/types/types';
 
+export const metadata = {
+  title: 'Digital Health - My Portfolio',
+  description: 'Advocacy and technical deep-dives into HealthTech.',
+};
 
+export default async function Health() {
+  const supabase = await createClient();
 
+  // Fetch specific category
+  const { data: posts } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('category', 'Digital Health')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false });
 
-
-
-
-
-export default function Health() {
-  const [posts, setPosts] = useState<Post[]>([]);
-
-  useEffect(() => {
-    DataService.getPosts().then(data => {
-      setPosts(data.filter(p => p.category === Category.HEALTH && p.status === 'published'));
-    });
-  }, []);
+  const formattedPosts: Post[] = (posts || []).map((p) => ({
+    ...p,
+    imageUrl: p.image_url,
+    date: new Date(p.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+    readTime: p.read_time || '5 min read',
+  }));
 
   return (
     <div className="space-y-12 animate-in fade-in duration-500">
@@ -37,13 +41,17 @@ export default function Health() {
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        {posts.map(post => (
-          <Link key={post.id} href={`/health/${post.slug}`} className="block h-full">
+        {formattedPosts.map(post => (
+          <Link key={post.id} href={`/blog/${post.slug}`} className="block h-full">
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-600 transition-colors h-full flex flex-col">
               <div className="h-48 bg-zinc-800 overflow-hidden relative">
-                <Image src={post.imageUrl || 'https://via.placeholder.com/800x400'}
+                <Image 
+                  src={post.imageUrl || 'https://via.placeholder.com/800x400'}
                   width={800}
-                  height={800} alt={post.title} className="w-full h-full object-cover opacity-80" />
+                  height={400} 
+                  alt={post.title} 
+                  className="w-full h-full object-cover opacity-80" 
+                />
                 <div className="absolute top-2 right-2 bg-black/70 backdrop-blur text-xs font-bold px-2 py-1 rounded text-white">
                   {post.readTime}
                 </div>
@@ -56,10 +64,10 @@ export default function Health() {
             </div>
           </Link>
         ))}
-        {posts.length === 0 && (
+        {formattedPosts.length === 0 && (
           <p className="text-zinc-500">More health-focused content coming soon.</p>
         )}
       </div>
     </div>
   );
-};
+}
