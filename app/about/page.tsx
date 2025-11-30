@@ -1,5 +1,4 @@
 import React from 'react';
-// Using relative path to resolve build error
 import { notFound } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 

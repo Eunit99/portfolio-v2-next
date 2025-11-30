@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { Lock, ArrowRight, Loader2 } from 'lucide-react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 
 
