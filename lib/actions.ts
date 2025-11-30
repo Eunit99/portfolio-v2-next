@@ -51,7 +51,7 @@ export async function subscribeNewsletter(formData: FormData) {
   // Validate email using the same regex as submitMessage for consistency
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!email || !emailRegex.test(email)) {
-    return { success: false, error: 'Invalid email address' }
+    return { success: false, error: 'Invalid email address.' }
   }
 
   const { error } = await supabase.from('subscribers').insert({ email })
