@@ -14,12 +14,17 @@ export default async function Health() {
   const supabase = await createClient();
 
   // Fetch specific category
-  const { data: posts } = await supabase
+  const { data: posts, error } = await supabase
     .from('posts')
     .select('*')
     .eq('category', 'Digital Health')
     .eq('status', 'published')
     .order('published_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching posts:', error);
+    return <div className="text-red-500 text-center py-10">Error loading health posts.</div>;
+  }
 
   const formattedPosts: Post[] = (posts || []).map((p) => ({
     ...p,
@@ -45,12 +50,12 @@ export default async function Health() {
           <Link key={post.id} href={`/blog/${post.slug}`} className="block h-full">
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden hover:border-zinc-600 transition-colors h-full flex flex-col">
               <div className="h-48 bg-zinc-800 overflow-hidden relative">
-                <Image 
+                <Image
                   src={post.imageUrl || 'https://via.placeholder.com/800x400'}
                   width={800}
-                  height={400} 
-                  alt={post.title} 
-                  className="w-full h-full object-cover opacity-80" 
+                  height={400}
+                  alt={post.title}
+                  className="w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute top-2 right-2 bg-black/70 backdrop-blur text-xs font-bold px-2 py-1 rounded text-white">
                   {post.readTime}

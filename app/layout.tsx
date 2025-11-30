@@ -6,6 +6,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import React, { useState, useEffect } from "react";
 import { Menu, X, Github, Twitter, Linkedin, Activity, BookOpen, PenTool, Mail, User, LogIn, LayoutDashboard, LogOut } from 'lucide-react';
+// @ts-expect-error global import
 import './globals.css';
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
