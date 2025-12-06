@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+// Use relative path
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
@@ -23,20 +24,17 @@ const WaveHeader = () => {
       dotSize: 1.5,
       spacing: 25,
       amplitude: 40,
-      frequency: 0.01,
-      speed: 0.01,
-      color: 'rgba(255, 255, 255, 0.6)',
+      frequency: 0.02,
+      speed: 0.02,
+      color: 'rgba(255, 255, 255, 0.7)',
     };
 
     const resize = () => {
       canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight; // Or a fixed height if you prefer
+      canvas.height = window.innerHeight;
     };
 
     const draw = () => {
-      // Use clearRect for transparency if you want the background color to show through
-      // or fillRect with a color to set the background.
-      // Here we use the parent's background color (black) effectively by clearing.
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       ctx.fillStyle = config.color;
@@ -79,17 +77,22 @@ const WaveHeader = () => {
   }, []);
 
   return (
-    <section className="relative w-full py-10 md:py-20 bg-black overflow-hidden flex items-center justify-center min-w-full mx-auto min-h-[600px]">
-      {/* Background Canvas */}
+    <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] h-[600px] bg-black overflow-hidden flex items-center justify-center">
+      {/* Background Canvas - Spans full width of the screen */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 block w-full h-full pointer-events-none"
       />
 
-      {/* Content Overlay */}
-      <div className="relative z-10 px-4 max-w-6xl mx-auto flex flex-col items-start min-w-full">
+      {/* Gradient Overlay for better text readability - spans 1/3 of width */}
+      <div className="absolute inset-0 w-full h-full flex justify-center pointer-events-none">
+        <div className="w-full h-full bg-linear-to-r from-black via-black/80 to-black blur-xl opacity-80"></div>
+      </div>
+
+      {/* Content Overlay - Constrained to max-w-6xl to match other page content */}
+      <div className="relative z-10 w-full max-w-6xl px-6 mx-auto flex flex-col justify-center h-full">
         <motion.h1
-          className="text-4xl md:text-6xl font-serif font-medium text-white tracking-tight leading-tight mb-6"
+          className="text-4xl md:text-6xl font-serif font-medium text-white tracking-tight leading-tight mb-6 max-w-3xl relative z-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -99,7 +102,7 @@ const WaveHeader = () => {
         </motion.h1>
 
         <motion.p
-          className="text-lg md:text-xl text-zinc-400 max-w-2xl leading-relaxed mb-8"
+          className="text-lg md:text-xl text-zinc-400 max-w-2xl leading-relaxed mb-8 relative z-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -108,28 +111,28 @@ const WaveHeader = () => {
         </motion.p>
 
         <motion.div
-          className="flex flex-col md:flex-row gap-4 w-full md:w-auto justify-center"
+          className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto relative z-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
         >
           <Link
             href="/contact"
-            className="px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-zinc-200 transition-colors flex items-center gap-2 min-w-[200px] justify-center"
+            className="px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-zinc-200 transition-colors flex items-center gap-2 min-w-[200px] justify-center md:justify-start"
           >
             Get in Touch <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
             href="/about"
-            className="px-6 py-3 border border-zinc-700 text-white font-medium rounded-full hover:bg-zinc-900 transition-colors flex items-center gap-2 min-w-[200px] justify-center"
+            className="px-6 py-3 border border-zinc-700 text-white font-medium rounded-full hover:bg-zinc-900 transition-colors flex items-center gap-2 min-w-[200px] justify-center md:justify-start"
           >
             About Me <ArrowRight className="w-4 h-4" />
           </Link>
         </motion.div>
       </div>
 
-      {/* Gradient Overlay to fade edges if needed */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none" />
+      {/* Gradient Overlay for better text readability at the bottom */}
+      <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-black pointer-events-none" />
     </section>
   );
 };

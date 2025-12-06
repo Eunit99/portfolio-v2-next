@@ -61,7 +61,7 @@ export default function BlogClient({ initialPosts }: { initialPosts: Post[] }) {
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <article key={post.id} className="group grid md:grid-cols-[1fr_2fr] gap-6 md:gap-8 items-start">
-              <Link href={`/blog/${post.slug}`} className="block aspect-[4/3] rounded-xl overflow-hidden bg-zinc-800">
+              <Link href={`/blog/${post.slug}`} className="block aspect-4/3 rounded-xl overflow-hidden bg-zinc-800">
                 <Image
                   src={post.imageUrl || 'https://via.placeholder.com/800x600'}
                   alt={post.title}

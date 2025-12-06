@@ -15,7 +15,6 @@ export default async function PostList() {
 
   if (error) {
     console.error('Error fetching posts:', error);
-    return <div className="text-red-500">Error loading posts.</div>;
   }
 
   const formattedPosts: Post[] = (posts || []).map(p => ({
@@ -30,6 +29,7 @@ export default async function PostList() {
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <h1 className="text-2xl font-serif font-bold text-white">Posts</h1>
         <div className="flex gap-4">
+          {/* Note: Server Side Search usually involves URL params. For simplicity in this dashboard list, we just render all. */}
           <Link href="/admin/posts/new" className="bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-zinc-200 transition-colors flex items-center gap-2">
             <Plus className="w-4 h-4" /> Create
           </Link>
@@ -63,6 +63,7 @@ export default async function PostList() {
                     <Link href={`/admin/posts/${post.id}`} className="p-2 hover:bg-zinc-800 rounded text-zinc-400 hover:text-white">
                       <Edit2 className="w-4 h-4" />
                     </Link>
+                    {/* Delete Button Form */}
                     <form action={deletePost.bind(null, post.id)}>
                       <button className="p-2 hover:bg-red-950/30 rounded text-zinc-400 hover:text-red-500">
                         <Trash2 className="w-4 h-4" />

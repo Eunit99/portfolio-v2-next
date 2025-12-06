@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
+// Removed unused imports ContactMessage, ResearchPaper
 import { Post } from '@/types/types'
 
 // --- Contact & Newsletter ---
@@ -9,6 +10,7 @@ import { Post } from '@/types/types'
 export async function submitMessage(formData: FormData) {
   const supabase = await createClient()
 
+  // Extract and trim fields
   const name = (formData.get('name') as string || '').trim()
   const email = (formData.get('email') as string || '').trim()
   const subject = (formData.get('subject') as string || '').trim()
@@ -46,12 +48,11 @@ export async function submitMessage(formData: FormData) {
 
 export async function subscribeNewsletter(formData: FormData) {
   const supabase = await createClient()
-  const email = (formData.get('email') as string || '').trim()
+  const email = formData.get('email') as string
 
-  // Validate email using the same regex as submitMessage for consistency
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!email || !emailRegex.test(email)) {
-    return { success: false, error: 'Invalid email address.' }
+  // Validate email
+  if (!email || !email.includes('@')) {
+    return { success: false, error: 'Invalid email address' }
   }
 
   const { error } = await supabase.from('subscribers').insert({ email })
