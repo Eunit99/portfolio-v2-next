@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search } from 'lucide-react';
-import { Category, Post } from '@/types/types';
+import { Link as LinkIcon, Search } from 'lucide-react';
+// Use relative path
+import { Category, Post } from '../types/types';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -61,12 +62,12 @@ export default function BlogClient({ initialPosts }: { initialPosts: Post[] }) {
           filteredPosts.map((post) => (
             <article key={post.id} className="group grid md:grid-cols-[1fr_2fr] gap-6 md:gap-8 items-start">
               <Link href={`/blog/${post.slug}`} className="block aspect-[4/3] rounded-xl overflow-hidden bg-zinc-800">
-                <Image 
-                  src={post.imageUrl || 'https://via.placeholder.com/800x600'} 
-                  alt={post.title} 
-                  width={800} 
-                  height={600} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100" 
+                <Image
+                  src={post.imageUrl || 'https://via.placeholder.com/800x600'}
+                  alt={post.title}
+                  width={800}
+                  height={600}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80 group-hover:opacity-100"
                 />
               </Link>
               <div className="space-y-3">
