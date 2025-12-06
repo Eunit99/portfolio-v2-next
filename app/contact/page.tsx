@@ -115,8 +115,8 @@ export default function Contact() {
 
       <div className="pt-12 border-t border-zinc-800 text-center space-y-2">
         <p className="text-zinc-500 text-sm">Or email me directly at</p>
-        <a href="mailto:hello@emmanuel.dev" className="text-xl font-bold text-white hover:underline decoration-zinc-500 underline-offset-4">
-          hello@emmanuel.dev
+        <a href="mailto:contact@eunit.me" className="text-xl font-bold text-white hover:underline decoration-zinc-500 underline-offset-4">
+          contact@eunit.me
         </a>
       </div>
     </div>

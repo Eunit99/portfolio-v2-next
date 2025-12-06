@@ -13,10 +13,10 @@ export interface Post {
   slug: string;
   excerpt: string;
   content: string;
-  date: string;
+  date: string; // Mapped from published_at
   category: Category;
-  readTime: string;
-  imageUrl?: string;
+  readTime: string; // Mapped from read_time
+  imageUrl?: string; // Mapped from image_url
   status: PostStatus;
   views?: number;
 }
@@ -29,17 +29,17 @@ export interface Project {
   link: string;
   github?: string;
   imageUrl?: string;
-  content?: string; // Markdown content for single project page
+  content?: string; 
 }
 
 export interface ResearchPaper {
   id: string;
   title: string;
   abstract: string;
-  publicationDate: string;
+  publicationDate: string; // Mapped from publication_date
   publisher: string;
   link: string;
-  content?: string; // For the single page view
+  content?: string;
 }
 
 export interface ContactMessage {
@@ -48,6 +48,16 @@ export interface ContactMessage {
   email: string;
   subject: string;
   message: string;
-  date: string;
-  read: boolean;
+  date: string; // Mapped from created_at
+  read: boolean; // Mapped from is_read
+}
+
+export interface Profile {
+  id: string;
+  full_name: string;
+  headline: string;
+  bio: string;
+  avatar_url: string;
+  technologies: string[]; // New field
+  focus_areas: string[];  // New field
 }

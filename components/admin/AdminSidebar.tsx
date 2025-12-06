@@ -4,8 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, FileText, LogOut, BookOpen, Activity, ArrowLeft } from 'lucide-react';
-// Fix relative path if needed, though alias should work in client components if config is right.
-// Falling back to relative for safety in this specific build environment.
+// Use relative path
 import { createClient } from '../../utils/supabase/client';
 
 export default function AdminSidebar() {
@@ -21,9 +20,9 @@ export default function AdminSidebar() {
 
   const navItems = [
     { label: 'Overview', path: '/admin/dashboard', icon: LayoutDashboard },
-    { label: 'Posts', path: '/admin/post-list', icon: FileText },
-    { label: 'Research', path: '/admin/research-list', icon: BookOpen },
-    { label: 'Messages', path: '/admin/message-list', icon: Activity },
+    { label: 'Posts', path: '/admin/posts', icon: FileText },
+    { label: 'Research', path: '/admin/research', icon: BookOpen },
+    { label: 'Messages', path: '/admin/messages', icon: Activity },
   ];
 
   return (

@@ -2,12 +2,13 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { ArrowLeft, Calendar, Clock, Link, Tag } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
 import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 import { DataService } from '@/lib/data';
 import { Post, Category } from '@/types/types';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 
 
 
@@ -61,7 +62,7 @@ export default function SinglePost() {
 
       {post.imageUrl && (
         <div className="aspect-video w-full rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800">
-          <Image src={post.imageUrl} alt={post.title} className="w-full h-full object-cover" />
+          <Image src={post.imageUrl} alt={post.title} width={500} height={600} className="w-full h-full object-cover" />
         </div>
       )}
 

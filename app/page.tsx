@@ -37,18 +37,18 @@ export default function Home() {
         <p className="text-lg md:text-xl text-zinc-400 max-w-2xl leading-relaxed">
           I&apos;m Emmanuel Uchenna. I engineer scalable frontend systems, write technical documentation that humans actually read, and advocate for digital health equity.
         </p>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-column md:flex-row items-center gap-4 w-full flex-wrap">
           <Link
             href="/contact"
-            className="px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-zinc-200 transition-colors flex items-center gap-2"
+            className="px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-zinc-200 transition-colors flex items-center gap-2 min-w-full md:min-w-0 justify-center "
           >
             Get in Touch <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
             href="/about"
-            className="px-6 py-3 border border-zinc-700 text-white font-medium rounded-full hover:bg-zinc-900 transition-colors"
+            className="px-6 py-3 border border-zinc-700 text-white font-medium rounded-full hover:bg-zinc-900 transition-colors flex items-center gap-2 min-w-full md:min-w-0 justify-center "
           >
-            More About Me
+            About Me <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>
