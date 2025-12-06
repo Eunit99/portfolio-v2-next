@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-// Use relative path to fix build error
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
@@ -95,7 +94,7 @@ const WaveHeader = () => {
 
       {/* Gradient Overlay for better text readability - spans 1/3 of width */}
       <div className="absolute inset-0 w-full h-full flex justify-center pointer-events-none">
-        <div className="w-full h-full bg-gradient-to-r from-black via-black/80 to-black blur-xl opacity-80"></div>
+        <div className="w-full h-full bg-linear-to-r from-black via-black/80 to-black blur-xl opacity-80"></div>
       </div>
 
       {/* Content Overlay - Constrained to max-w-6xl to match other page content */}
@@ -141,7 +140,7 @@ const WaveHeader = () => {
       </div>
 
       {/* Gradient Overlay for better text readability at the bottom */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-black pointer-events-none" />
     </section>
   );
 };
