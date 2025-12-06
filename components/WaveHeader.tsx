@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+// Use relative path
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
@@ -20,12 +21,12 @@ const WaveHeader = () => {
 
     // Configuration for the wave
     const config = {
-      dotSize: 1.5, // Size of the dots
-      spacing: 25, // Spacing between dots
-      amplitude: 40, // How high the wave peaks are
-      frequency: 0.02, // How tight the waves are
-      speed: 0.02, // How fast the animation moves
-      color: 'rgba(255, 255, 255, 0.7)', // Dot color
+      dotSize: 1.5,
+      spacing: 25,
+      amplitude: 40,
+      frequency: 0.02,
+      speed: 0.02,
+      color: 'rgba(255, 255, 255, 0.7)',
     };
 
     const resize = () => {
@@ -34,7 +35,6 @@ const WaveHeader = () => {
     };
 
     const draw = () => {
-      // Clear the canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       ctx.fillStyle = config.color;
@@ -47,17 +47,13 @@ const WaveHeader = () => {
           const x = i * config.spacing;
           const originalY = j * config.spacing;
 
-          // The Magic Math:
-          // We offset the Y position based on X and Z (row/col) to create a 3D-like wave
           const waveOffset =
             Math.sin(i * config.frequency + time) * config.amplitude +
             Math.cos(j * config.frequency + time) * config.amplitude;
 
           const y = originalY + waveOffset;
 
-          // Draw the dot
           ctx.beginPath();
-          // Optional: Change dot size based on wave height for "depth" perception
           const scale = (waveOffset + config.amplitude * 2) / (config.amplitude * 4);
           const radius = config.dotSize + (scale * 1);
 
@@ -71,8 +67,6 @@ const WaveHeader = () => {
     };
 
     window.addEventListener('resize', resize);
-
-    // Initialize
     resize();
     draw();
 
@@ -83,8 +77,6 @@ const WaveHeader = () => {
   }, []);
 
   return (
-    // The section itself is full width (w-full) and breaks out of parent constraints if any
-    // But we'll handle the breakout in the parent layout usage to be safe
     <section className="relative w-screen left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] h-[600px] bg-black overflow-hidden flex items-center justify-center">
       {/* Background Canvas - Spans full width of the screen */}
       <canvas

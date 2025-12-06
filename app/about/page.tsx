@@ -50,45 +50,74 @@ export default async function About() {
       <header className="space-y-6 text-center md:text-left">
         {/* Avatar Image with Animation */}
         {profile.avatar_url && (
-          <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mx-auto md:mx-0 border-4 border-white/10 shadow-lg">
+          <div
+            data-aos="fade-up"
+            data-aos-delay={100} // Stagger effect
+            className="relative w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden mx-auto md:mx-0 border-4 border-white/10 shadow-lg group">
             <Image
               src={profile.avatar_url}
               alt={profile.full_name}
               width={160}
               height={160}
-              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 opacity-90 hover:opacity-100"
+              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 opacity-90 group-hover:opacity-100 scale-100 group-hover:scale-105"
               priority
             />
+            {/* Subtle overlay for better text contrast if needed, though grayscale handles mood well */}
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none" />
           </div>
         )}
 
         <div>
-          <h1 className="text-4xl font-serif text-white">About {profile.full_name}</h1>
-          {profile.headline && <p className="text-xl text-zinc-400 mt-2">{profile.headline}</p>}
-          <div className="h-1 w-20 bg-white mt-4 mx-auto md:mx-0"></div>
+          <h1 className="text-4xl font-serif text-white"
+            data-aos="fade-up"
+            data-aos-delay={100} // Stagger effect
+          >About {profile.full_name}</h1>
+          {profile.headline && <p
+            data-aos="fade-up"
+            data-aos-delay={200} // Stagger effect
+            className="text-xl text-zinc-400 mt-2">{profile.headline}</p>}
+          <div className="h-1 w-20 bg-white mt-4 mx-auto md:mx-0"
+            data-aos="fade-up"
+            data-aos-delay={100}
+          ></div>
         </div>
       </header>
 
       <div className="prose prose-invert prose-lg text-zinc-400 leading-loose">
         {paragraphs.map((para: string, index: number) => (
-          <p key={index}>{para}</p>
+          <p
+            data-aos="fade-up"
+            data-aos-delay={index * 100} // Stagger effect
+            key={index}>{para}</p>
         ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-zinc-800">
         <div className="space-y-4">
-          <h3 className="text-xl font-serif text-white">Core Technologies</h3>
+          <h3 className="text-xl font-serif text-white"
+            data-aos="fade-up"
+            data-aos-delay={100}
+          >Core Technologies</h3>
           <ul className="space-y-2 text-zinc-400">
             {technologies.map((tech, index) => (
-              <li key={index}>{tech}</li>
+              <li
+                data-aos="fade-up"
+                data-aos-delay={index * 100} // Stagger effect
+                key={index}>{tech}</li>
             ))}
           </ul>
         </div>
         <div className="space-y-4">
-          <h3 className="text-xl font-serif text-white">Areas of Focus</h3>
+          <h3 className="text-xl font-serif text-white"
+            data-aos="fade-up"
+            data-aos-delay={100}
+          >Areas of Focus</h3>
           <ul className="space-y-2 text-zinc-400">
             {focusAreas.map((area, index) => (
-              <li key={index}>{area}</li>
+              <li
+                data-aos="fade-up"
+                data-aos-delay={index * 100} // Stagger effect
+                key={index}>{area}</li>
             ))}
           </ul>
         </div>
