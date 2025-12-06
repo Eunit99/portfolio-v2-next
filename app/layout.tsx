@@ -80,7 +80,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <div className="min-h-screen bg-background text-zinc-300 font-sans selection:bg-zinc-800 selection:text-white flex flex-col">
           {/* Navigation */}

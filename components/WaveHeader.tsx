@@ -48,7 +48,7 @@ const WaveHeader = () => {
           const x = i * config.spacing;
           const originalY = j * config.spacing;
 
-          // The Magic Math: 
+          // The Magic Math:
           // We offset the Y position based on X and Z (row/col) to create a 3D-like wave
           const waveOffset =
             Math.sin(i * config.frequency + time) * config.amplitude +
@@ -93,10 +93,15 @@ const WaveHeader = () => {
         className="absolute inset-0 block w-full h-full pointer-events-none"
       />
 
+      {/* Gradient Overlay for better text readability - spans 1/3 of width */}
+      <div className="absolute inset-0 w-full h-full flex justify-center pointer-events-none">
+        <div className="w-full h-full bg-gradient-to-r from-black via-black/80 to-black blur-xl opacity-80"></div>
+      </div>
+
       {/* Content Overlay - Constrained to max-w-6xl to match other page content */}
       <div className="relative z-10 w-full max-w-6xl px-6 mx-auto flex flex-col justify-center h-full">
         <motion.h1
-          className="text-4xl md:text-6xl font-serif font-medium text-white tracking-tight leading-tight mb-6 max-w-3xl"
+          className="text-4xl md:text-6xl font-serif font-medium text-white tracking-tight leading-tight mb-6 max-w-3xl relative z-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -106,7 +111,7 @@ const WaveHeader = () => {
         </motion.h1>
 
         <motion.p
-          className="text-lg md:text-xl text-zinc-400 max-w-2xl leading-relaxed mb-8"
+          className="text-lg md:text-xl text-zinc-400 max-w-2xl leading-relaxed mb-8 relative z-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
@@ -115,7 +120,7 @@ const WaveHeader = () => {
         </motion.p>
 
         <motion.div
-          className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto"
+          className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto relative z-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
@@ -135,7 +140,7 @@ const WaveHeader = () => {
         </motion.div>
       </div>
 
-      {/* Gradient Overlay for better text readability */}
+      {/* Gradient Overlay for better text readability at the bottom */}
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black pointer-events-none" />
     </section>
   );
