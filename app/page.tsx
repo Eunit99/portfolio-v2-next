@@ -1,14 +1,14 @@
-"use client";
-
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
+// Use relative path
 import { DataService } from '../lib/data';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Post, Project } from '@/types/types';
-
-
+// Use relative path
+import { Post, Project } from '../types/types';
+import WaveHeader from '@/components/WaveHeader';
 
 export default function Home() {
   const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
@@ -28,41 +28,22 @@ export default function Home() {
   return (
     <div className="space-y-24 animate-in fade-in duration-700">
 
-      {/* Hero Section */}
-      <section className="space-y-8 py-10 md:py-20">
-        <h1 className="text-4xl md:text-6xl font-serif font-medium text-white tracking-tight leading-tight">
-          Building the future of <br className="hidden md:block" />
-          <span className="text-zinc-500 italic">health, tech, and communication.</span>
-        </h1>
-        <p className="text-lg md:text-xl text-zinc-400 max-w-2xl leading-relaxed">
-          I&apos;m Emmanuel Uchenna. I engineer scalable frontend systems, write technical documentation that humans actually read, and advocate for digital health equity.
-        </p>
-        <div className="flex flex-column md:flex-row items-center gap-4 w-full flex-wrap">
-          <Link
-            href="/contact"
-            className="px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-zinc-200 transition-colors flex items-center gap-2 min-w-full md:min-w-0 justify-center "
-          >
-            Get in Touch <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link
-            href="/about"
-            className="px-6 py-3 border border-zinc-700 text-white font-medium rounded-full hover:bg-zinc-900 transition-colors flex items-center gap-2 min-w-full md:min-w-0 justify-center "
-          >
-            About Me <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
+      {/* Replaced original hero section with WaveHeader.
+        The content inside WaveHeader (in components/WaveHeader.tsx)
+        matches your original hero content exactly.
+      */}
+      <WaveHeader />
 
       {/* Featured Projects */}
-      <section className="space-y-8">
+      <section className="space-y-8 px-6 max-w-6xl mx-auto">
         <div className="flex items-center justify-between border-b border-border pb-4">
           <h2 className="text-2xl font-serif text-white">Selected Projects</h2>
-          <Link href="/research" className="text-sm text-zinc-500 hover:text-white transition-colors">View All Research &rarr;</Link>
+          <Link href="/project/all" className="text-sm text-zinc-500 hover:text-white transition-colors">View All Research &rarr;</Link>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
           {featuredProjects.map((project) => (
-            <Link key={project.id} href={`/projects/${project.id}`} className="block group">
+            <Link key={project.id} href={`/project/${project.id}`} className="block group">
               <div className="relative bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-600 transition-all duration-300 h-full">
                 <div className="aspect-video bg-zinc-800 relative overflow-hidden">
                   <Image
@@ -91,7 +72,7 @@ export default function Home() {
       </section>
 
       {/* Recent Writing */}
-      <section className="space-y-8">
+      <section className="space-y-8 px-6 max-w-6xl mx-auto">
         <div className="flex items-center justify-between border-b border-border pb-4">
           <h2 className="text-2xl font-serif text-white">Recent Writing</h2>
           <Link href="/blog" className="text-sm text-zinc-500 hover:text-white transition-colors">Read Blog &rarr;</Link>
